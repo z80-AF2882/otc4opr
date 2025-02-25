@@ -35,12 +35,13 @@ OTC4OPR is a TamperMonkey script that seamlessly renames units, weapons, and spe
     - **Warning**: It is a JavaScript file that will be evaluated in your browser. Use only what you trust.
 7. The rename ruleset is applied to each datasheet, modifying unit names, weapon names, and special ability names accordingly.
 
-## Working example local file for AOFS Beastmen
-- In this example Beastmen _reskined_ to Gnoll army from ficticious game.
+## Working example local file
+- In this example repository contains only one ruleset to _reskin_ AOFS Beastmen to Gnoll army from ficticious game.
 - It contains one "complication": when renaming "Hand Weapons" use "Longswords" for "Ndoli Warriors" and "Short swords" for "Waheni Reiders".
 - Link to the list is https://army-forge.onepagerules.com/share?id=S1EQwJX5GPrF&name=Gnolls
 ```
 [
+{
     pattern: "@Beastmen",    
     datasheetRenames: [
         "Ndoli Beast Lord => Gnoll Alpha",
@@ -54,6 +55,7 @@ OTC4OPR is a TamperMonkey script that seamlessly renames units, weapons, and spe
         "Heavy Hand Weapon => Ritual Knife",
         { predicate: "Hand Weapons", action: (target) target === "Ndoli Warriors" ? "Longswords" : "Short swords" }
     ]
+}, 
 ]
 ```
 
