@@ -10,7 +10,7 @@ OTC4OPR is a TamperMonkey script that seamlessly renames units, weapons, and spe
 4. **Rename the script**: Change the script name to *OTC4OPR* and save it.
 5. **Check demo in OPR Force Builder**:
     - Open sample army https://army-forge.onepagerules.com/share?id=S1EQwJX5GPrF&name=Gnolls
-    - Ruleset for this is hardcoded in user script.
+    - Ruleset for this is hardcoded in user script. If it works you should see renamed units and print version of page also looks bit different comparing to stock OPR sheet.
 6. **Modify script settings**: Edit the top portion of the script to adjust its settings as needed.
 7. **Create own repository file**: Based on your needs create repository file. Please use example or detailed description from below.
 8. **Use in OPR Force Builder**:
@@ -28,7 +28,8 @@ OTC4OPR is a TamperMonkey script that seamlessly renames units, weapons, and spe
 ```
 [
 {
-    pattern: "@Beastmen",    
+    pattern: "@Beastmen",
+    color: "#806633",    
     datasheetRenames: [
         "Ndoli Beast Lord => Gnoll Alpha",
         "Ndoli Elite => Gnoll Beta",
