@@ -15,6 +15,8 @@ OTC4OPR is a TamperMonkey script that seamlessly renames units, weapons, and spe
     - Click *View List* (eye icon in the top-right corner).
     - Ensure *Cards View* is enabled.
     - If you do not have a rename ruleset hardcoded in the script, you will be prompted to provide a local file with rulesets.
+  
+**Hint:** if script did not run reloading page sometimes help. Also script generates INFO and DEBUG messages into web browser's dev console.
 
 ## How It Works
 1. The script is triggered when a user opens a URL starting with `https://army-forge.onepagerules.com/view?listId=`.
