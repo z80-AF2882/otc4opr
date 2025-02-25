@@ -19,6 +19,9 @@ OTC4OPR is a TamperMonkey script that seamlessly renames units, weapons, and spe
 **Hint:** if script did not run reloading page sometimes help. Also script generates INFO and DEBUG messages into web browser's dev console.
 
 ## How It Works
+
+_This is bit technical but it's necessary. Whole solution is ... less then user friendly. But it's simple at it works. Sorry._
+
 1. The script is triggered when a user opens a URL starting with `https://army-forge.onepagerules.com/view?listId=`.
 2. The script waits for a set period to allow the page to load completely.
     - The grace period can be adjusted in the script settings by chaning value of constant OTC4OPR_GRACE_PERIOD to what ever millisecond value you like.
@@ -34,6 +37,11 @@ OTC4OPR is a TamperMonkey script that seamlessly renames units, weapons, and spe
     - If no ruleset is found, the user is prompted to provide one from a local file.
     - **Warning**: It is a JavaScript file that will be evaluated in your browser. Use only what you trust.
 7. The rename ruleset is applied to each datasheet, modifying unit names, weapon names, and special ability names accordingly.
+
+## Why This Approach?
+Some companies are highly protective of their intellectual property. However:
+- There are no legal issues with maintaining a personal file containing renamed units.
+- As long as users create their own rename rulesets locally, there are no restrictions.
 
 ## Working example local file
 - In this example repository contains only one ruleset to _reskin_ AOFS Beastmen to Gnoll army from ficticious game.
@@ -58,11 +66,6 @@ OTC4OPR is a TamperMonkey script that seamlessly renames units, weapons, and spe
 }, 
 ]
 ```
-
-## Why This Approach?
-Some companies are highly protective of their intellectual property. However:
-- There are no legal issues with maintaining a personal file containing renamed units.
-- As long as users create their own rename rulesets locally, there are no restrictions.
 
 This script enables players to enjoy the OPR ruleset while seamlessly integrating their favorite universes.
 
