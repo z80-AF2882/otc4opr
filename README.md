@@ -40,15 +40,16 @@ Some companies are highly protective of their intellectual property. However:
 
 This script enables players to enjoy the OPR ruleset while seamlessly integrating their favorite universes.
 
-## Rename Ruleset Repository, Rename Ruleset, Rename Rule
-- Rename Ruleset Repository is list of all Rename Rulesets.
+## Rename Ruleset Repository, Ruleset, Rule
+- Ruleset Repository is list of all Rulesets.
     - one ruleset is selected and rule by rule is applied to each datasheet weapon and ability from data model extracted from web page
-- Rename Ruleset is list of Rename Rules split into three parts:
+- Rename Ruleset is list of Rules split into three parts:
     - datasheet rules
     - weapon rules
     - special ability rules
-- Rename Rule is single IF condition THEN action.
-
+- Rename Rule is single IF condition THEN action that is applied to parts of data model.
+- Datamodel is list of Datasheets
+- Datasheet represents single unit with Stats, Weapons, Special Abilities.
 
 ## Rename Ruleset Selection
 - The _rename ruleset repository_ is a list of rename rulesets in user defined order.
