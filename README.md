@@ -7,43 +7,21 @@ OTC4OPR is a TamperMonkey script that seamlessly renames units, weapons, and spe
 1. **Install TamperMonkey**: Ensure you have the TamperMonkey extension installed in your preferred web browser.
 2. **Create a new TamperMonkey script**: Open TamperMonkey and create a new user script.
 3. **Copy the script**: Copy the content of `otc4opr.js` into the new script.
-4. **Modify script settings**: Edit the top portion of the script to adjust its settings as needed.
-    - Settings are not just in header but even at start of user script itself.
-6. **Rename the script**: Change the script name to *OTC4OPR* and save it.
-7. **Use in OPR Force Builder**:
-    - Open your army in *OPR Force Builder*.
+4. **Rename the script**: Change the script name to *OTC4OPR* and save it.
+5. **Check demo in OPR Force Builder**:
+    - Open sample army https://army-forge.onepagerules.com/share?id=S1EQwJX5GPrF&name=Gnolls
+    - Ruleset for this is hardcoded in user script.
+6. **Modify script settings**: Edit the top portion of the script to adjust its settings as needed.
+7. **Create own repository file**: Based on your needs create repository file. Please use example or detailed description from below.
+8. **Use in OPR Force Builder**:
+    - Open your army in force builder
     - Click *View List* (eye icon in the top-right corner).
     - Ensure *Cards View* is enabled.
     - If you do not have a rename ruleset hardcoded in the script, you will be prompted to provide a local file with rulesets.
   
-**Hint:** if script did not run reloading page sometimes help. Also script generates INFO and DEBUG messages into web browser's dev console.
+**Hint:** if script did not run, reloading page (pressing F5) sometimes help. Also script generates INFO and DEBUG messages into web browser's dev console.
 
-## How It Works
-
-_This is bit technical but it's necessary. Whole solution is ... less then user friendly. But it's simple at it works. Sorry._
-
-1. The script is triggered when a user opens a URL starting with `https://army-forge.onepagerules.com/view?listId=`.
-2. The script waits for a set period to allow the page to load completely.
-    - The grace period can be adjusted in the script settings by chaning value of constant OTC4OPR_GRACE_PERIOD to what ever millisecond value you like.
-    - This is suboptimal way to observe web page state but it works.
-3. Minor style adjustments are applied to web page:
-    - Datasheet headers and table headers get custom colors.
-    - Borders are added around datasheets.
-    - These modifications can be disabled in the script settings by changing value of constant OTC4OPR_CHANGE_CSS to false.
-4. The script parses unit datasheets from web page (see *Data Model* section).
-5. List name, army book name, and army book version is parsed from web page.
-6. A _rename ruleset_ is selected from _rename ruleset repository_ based on the list name and army book name and army book version.
-    - For more details, see *Rename Ruleset Selection*.
-    - If no ruleset is found, the user is prompted to provide one from a local file.
-    - **Warning**: It is a JavaScript file that will be evaluated in your browser. Use only what you trust.
-7. The rename ruleset is applied to each datasheet, modifying unit names, weapon names, and special ability names accordingly.
-
-## Why This Approach?
-Some companies are highly protective of their intellectual property. However:
-- There are no legal issues with maintaining a personal file containing renamed units.
-- As long as users create their own rename rulesets locally, there are no restrictions.
-
-## Working example local file
+## Working example local repository file
 - In this example repository contains only one ruleset to _reskin_ AOFS Beastmen to Gnoll army from ficticious game.
 - It contains one "complication": when renaming "Hand Weapons" use "Longswords" for "Ndoli Warriors" and "Short swords" for "Waheni Reiders".
 - Link to the list is https://army-forge.onepagerules.com/share?id=S1EQwJX5GPrF&name=Gnolls
@@ -67,7 +45,30 @@ Some companies are highly protective of their intellectual property. However:
 ]
 ```
 
-This script enables players to enjoy the OPR ruleset while seamlessly integrating their favorite universes.
+## How It Works
+
+_This is bit technical but it's necessary. Whole solution is less then user friendly. But it's simple and it (mostly) works. Sorry._
+
+1. The script is triggered when a user opens a URL starting with `https://army-forge.onepagerules.com/view?listId=`.
+2. The script waits for a set period to allow the page to load completely.
+    - The grace period can be adjusted in the script settings by chaning value of constant OTC4OPR_GRACE_PERIOD to what ever millisecond value you like.
+    - This is suboptimal way to observe web page state but it works.
+3. Minor style adjustments are applied to web page:
+    - Datasheet headers and table headers get custom colors.
+    - Borders are added around datasheets.
+    - These modifications can be disabled in the script settings by changing value of constant OTC4OPR_CHANGE_CSS to false.
+4. The script parses unit datasheets from web page (see *Data Model* section).
+5. List name, army book name, and army book version is parsed from web page.
+6. A _rename ruleset_ is selected from _rename ruleset repository_ based on the list name and army book name and army book version.
+    - For more details, see *Rename Ruleset Selection*.
+    - If no ruleset is found, the user is prompted to provide one from a local file.
+    - **Warning**: It is a JavaScript file that will be evaluated in your browser. Use only what you trust.
+7. The rename ruleset is applied to each datasheet, modifying unit names, weapon names, and special ability names accordingly.
+
+## Why This Approach?
+Some companies are highly protective of their intellectual property. However:
+- There are no legal issues with maintaining a personal file containing renamed units.
+- As long as users create their own rename rulesets locally, there are no restrictions.
 
 ## Rename Ruleset Repository, Ruleset, Rule
 - **Ruleset Repository** list of all Rulesets.
