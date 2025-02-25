@@ -8,7 +8,7 @@ OTC4OPR is a TamperMonkey script that seamlessly renames units, weapons, and spe
 2. **Create a new TamperMonkey script**: Open TamperMonkey and create a new user script.
 3. **Copy the script**: Copy the content of `otc4opr.js` into the new script.
 4. **Modify script settings**: Edit the top portion of the script to adjust its settings as needed.
-    - Settings are not just in header but even at start javascript file itself.
+    - Settings are not just in header but even at start of user script itself.
 6. **Rename the script**: Change the script name to *OTC4OPR* and save it.
 7. **Use in OPR Force Builder**:
     - Open your army in *OPR Force Builder*.
