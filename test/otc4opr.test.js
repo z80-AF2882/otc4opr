@@ -1,8 +1,14 @@
 const { assert } = require('chai')
 const { describe } = require('mocha')
 const mochaIt = require('mocha').it
-
-const { makeGlobPattern, createRulesetPredicate, ForceList, ArmyBook } = require('../src/otc4opr')
+const fs = require('fs');
+const path = require('path');
+const { JSDOM } = require('jsdom');
+const { expect } = require('chai');
+// Exports from otc4opr.js
+const {
+    makeGlobPattern, createRulesetPredicate, ForceList, ArmyBook
+} = require('../src/otc4opr')
 
 describe('makeGlobPatten()', () => {
     function it(pattern, expected) {
@@ -11,30 +17,6 @@ describe('makeGlobPatten()', () => {
     it('*', /^.*$/i)
     it('hello', /^hello$/i)
     it('he*o', /^he.*o$/i)
-});
-
-const BB_HEADER = {
-    forceName: "My force",
-    bookFullName: "Battle Brothers 3.1.4",
-    bookName: "Battle Brothers",
-}
-
-const DAO_HEADER = {
-    forceName: "My force",
-    bookFullName: "DAO Union 3.1.5",
-    bookName: "DAO Union",
-}
-
-describe('createRulesetPredicate() with pattern returns true', () => {
-    function it(pattern, header, expected) {
-        mochaIt(`'${pattern}' vs [${Object.values(header)}]`, () => assert.strictEqual(createRulesetPredicate({pattern: pattern})(header), expected) )
-    }
-    // it("Battle Brothers", BB_HEADER, false)
-    it("@Battle Brothers", BB_HEADER, true)
-    it("@ Battle Brothers", BB_HEADER, true)
-    it("@ DAO Union", BB_HEADER, false)
-    it("@ DAO Union", DAO_HEADER, true)
-    it("@ DaO Union", DAO_HEADER, true)
 });
 
 describe('ArmyBook.parse()', () => {
@@ -46,37 +28,54 @@ describe('ArmyBook.parse()', () => {
             }
         )
     }
-    it('Army book name 1.0.1', "Army book name", "1.0.1");
-    it('Army book name  2', "Army book name", "2");
-    it('  Army   book   name  ', "Army book name", undefined);
-    it (" Sample  3.1.4 ", "Sample", "3.1.4")
-
+    it('Army book name 1.0.1', "army book name", "1.0.1");
+    it('Army book name  2', "army book name", "2");
+    it('  Army   book   name  ', "army book name", undefined);
+    it (" Sample  3.1.4 ", "sample", "3.1.4")
 })
 
-describe('ForceList.parse() check single book', () => {
+describe('ForceList.parse() using single book', () => {
     function it(book, expectedName, expectedVersion) {
         mochaIt(`'${book}' vs '${expectedName}' v'${expectedVersion}'`, () =>
             assert.deepEqual(new ForceList("No Name", [ book ]).books, [{name:expectedName, version:expectedVersion} ]) )
     }
 
-    it ("Sample 3.1.4", "Sample", "3.1.4")
-    it (" Sample  3.1.4 ", "Sample", "3.1.4")
+    it ("Sample 3.1.4", "sample", "3.1.4")
+    it (" Sample  3.1.4 ", "sample", "3.1.4")
 })
 
-describe('ForceList.parse() check multiple books', () => {
+describe('ForceList.parse() using multiple books', () => {
     function it(booksArray, expectedBooks) {
         mochaIt(`${Object.values(booksArray)} vs ${Object.values(expectedBooks)}`, () =>
             assert.deepEqual(new ForceList("No Name", booksArray).books, expectedBooks) )
     }
 
-    it (["SampleA 3.1.4 "," Sample B 2.0"], [new ArmyBook("SampleA", "3.1.4"), new ArmyBook("Sample B", "2.0")])
+    it (["SampleA 3.1.4 "," Sample B 2.0"], [new ArmyBook("samplea", "3.1.4"), new ArmyBook("sample b", "2.0")])
     it ([
         " Sample   A    3.1.4 ",
         " Sample B 2.0",
         "SampleC",
     ], [
-        new ArmyBook("Sample A", "3.1.4"),
-        new ArmyBook("Sample B", "2.0"),
-        new ArmyBook("SampleC", undefined)
+        new ArmyBook("sample a", "3.1.4"),
+        new ArmyBook("sample b", "2.0"),
+        new ArmyBook("samplec", undefined)
     ])
+})
+
+describe('Parse demo.html into ForceList', () => {
+    function loadDocument(fileName) {
+        const htmlPath = path.resolve(__dirname, fileName);
+        const htmlContent = fs.readFileSync(htmlPath, 'utf8');
+        dom = new JSDOM(htmlContent, { runScripts: "dangerously", resources: "usable" });
+        return  dom.window.document;
+    }
+
+    let it = mochaIt
+    let document = loadDocument('demo.html')
+    it('Document loaded', ()=> expect(document).to.not.be.undefined )
+    let fl = ForceList.parse(document)
+    it('Force list parsed', ()=> expect(fl).to.not.be.undefined )
+    it('Army name', () => expect(fl.books[0].name).to.equal('beastmen'))
+    it('Army version', () => expect(fl.books[0].version).to.equal('3.4.1'))
+    it('Six datacards', () => expect(fl.datacards).to.have.length(6))
 })

@@ -17,7 +17,7 @@ OTC4OPR is a TamperMonkey script that seamlessly renames units, weapons, and spe
     - Open your army in force builder
     - Click *View List* (eye icon in the top-right corner).
     - Ensure *Cards View* is enabled.
-    - If you do not have a rename ruleset hardcoded in the script, you will be prompted to provide a local file with rulesets.
+    - If you do not have a ruleset hardcoded in the script, you will be prompted to provide a local file with rulesets.
   
 **Hint:** if script did not run, reloading page (pressing F5) sometimes help. Also script generates INFO and DEBUG messages into web browser's dev console.
 
@@ -43,7 +43,7 @@ OTC4OPR is a TamperMonkey script that seamlessly renames units, weapons, and spe
             {
                 predicate: "Hand Weapons",
                 action: (target) =>
-                    target === "Ndoli Warriors" ? "Longswords" : "Short swords"
+                    target.datacard.name === "Ndoli Warriors" ? "Longswords" : "Short swords"
             }
         ]
     },
@@ -57,44 +57,44 @@ _This is bit technical but it's necessary. Whole solution is less then user frie
 1. The script is triggered when a user opens a URL starting with `https://army-forge.onepagerules.com/view?listId=`.
 2. The script waits for a set period to allow the page to load completely.
     - The grace period can be adjusted in the script settings by chaning value of constant `OTC4OPR_GRACE_PERIOD` to what ever millisecond value you like.
-    - This is suboptimal way to observe web page state but it works.
+    - This is sub-optimal way to observe web page state, but it works.
 3. Minor style adjustments are applied to web page:
     - Datasheet headers and table headers get custom colors.
     - Borders are added around datacards.
     - These modifications can be disabled in the script settings by changing value of constant `OTC4OPR_UPDATE_CSS` to false.
 4. The script parses unit datacards from web page (see *Data Model* section).
 5. List name, army book name, and army book version is parsed from web page.
-6. A _rename ruleset_ is selected from _rename ruleset repository_ based on the list name and army book name and army book version.
-    - For more details, see *Rename Ruleset Selection*.
+6. A _ruleset_ is selected from _ruleset repository_ based on the list name and army book name and army book version.
+    - For more details, see *Ruleset Selection*.
     - If no ruleset is found, the user is prompted to provide one from a local file.
     - **Warning**: It is a JavaScript file that will be evaluated in your browser. Use only what you trust.
-7. The rename ruleset is applied to each datacard, modifying unit names, weapon names, and special ability names accordingly.
+7. The ruleset is applied to each datacard, modifying unit names, weapon names, and special ability names accordingly.
 
 ## Why This Approach?
 Some companies are highly protective of their intellectual property. However:
 - There are no legal issues with maintaining a personal file containing renamed units.
-- As long as users create their own rename rulesets locally, there are no restrictions.
+- As long as users create their own rulesets locally, there are no restrictions.
 
-## Rename Ruleset Repository, Ruleset, Rule
+## Ruleset Repository, Ruleset, Rule
 - **Ruleset Repository** list of all Rulesets.
     - one ruleset is selected and rule by rule is applied to each datacard weapon and ability from data model extracted from web page
-- **Rename Ruleset** is list of _Rules_ split into three parts:
+- **Ruleset** is list of _Rules_ split into three parts:
     - datacard rules
     - weapon rules
     - special ability rules
-- **Rename Rule** is single `IF condition THEN action` that is applied to parts of data model.
+- **Rule** is single `IF condition THEN action` that is applied to parts of data model.
 - **Datamodel** is list of Datasheets parsed from View web page in OPR Force Builder.
 - **Datasheet** represents single unit with _Stats_, _Weapons_, _Special Abilities_.
 - Detailed attributes / functions are below or ... in user script javadoc
 
-## Rename Ruleset Selection
-- The _rename ruleset repository_ is a list of rename rulesets in user defined order.
+## Ruleset Selection
+- The _ruleset repository_ is a list of rulesets in user defined order.
 - Each ruleset contains:
     - **Pattern**: Checked against list name and army book name. If it matches, the ruleset is selected and selection process stop.
     - **ID**: Unique identifier used if the ruleset is included in others.
-    - **Datasheet Rename Rules**: List of rename rules applied to each datacard.
-    - **Weapon Rename Rules**: List of rename rules applied to each weapon.
-    - **Special Rename Rules**: List of rename rules applied to each special ability.
+    - **Datasheet Rules**: List of rules applied to each datacard.
+    - **Weapon Rules**: List of rules applied to each weapon.
+    - **Special Rules**: List of rules applied to each special ability.
 - Each time a list is viewed in *OPR Force Builder*, the script scans the repository and selects the first ruleset with matching pattern. Pattern is matched using in following order:
     - "List name @ Army Book Name With Version"
     - "List name @ Army Book Name"
@@ -102,7 +102,7 @@ Some companies are highly protective of their intellectual property. However:
     - "@ Army Book Name With Version"
     - "@ Army Book Name"
     - Use `*` to substitute parts of text (e.g., `@ Battle Brothers 3.*` matches all Battle Brothers in major verson 3).
-- There are two ways to provide a rename ruleset repository:
+- There are two ways to provide a ruleset repository:
     - **Hardcoded at the top of the script** by setting `OTC4OPR_BUILTIN_RULESET_REPOSITORY`.
         - **Pros**: No need to provide a local file each time the script runs.
         - **Cons**: Manual modification is required after script updates.
@@ -112,14 +112,14 @@ Some companies are highly protective of their intellectual property. However:
 - The script first tries the hardcoded repository. If no match is found, it prompts for local JavaScript file with a small bar at the top of the webpage.
 - The bar is visible  in case the user wants to switch to a different ruleset repository.
 
-## Rename Rule Definition
-- A rename rule follows the structure: **IF predicate MATCHES target THEN action**.
+## Rule Definition
+- A rule follows the structure: **IF predicate MATCHES target THEN action**.
 - Predicate and action are part of the rule.
 - Target is one of:
   - **Datasheet**
   - **Weapon**
   - **Special Ability**
-- Define rename rules in two ways:
+- Define rules in two ways:
     - **Object format**: `{ predicate: ..., action: ... }`
         - Predicate and action can be either a string or a JavaScript function for complex logic.
     - **String format**: `"predicate string => action string"` (shorthand for `{ predicate: "predicate string", action: "action string" }`).
@@ -142,7 +142,8 @@ Some companies are highly protective of their intellectual property. However:
       ```
       { 
         predicate: 'Energy Pistol', 
-        action: (target) => target.datacard.originalName == 'Orc Leader' ? 'Mega Blasting Pistol' : target.name 
+        action: (target) => target.datacard.name == 'Orc Leader' ?
+            'Mega Blasting Pistol' : target.name 
       }
       ```
 
